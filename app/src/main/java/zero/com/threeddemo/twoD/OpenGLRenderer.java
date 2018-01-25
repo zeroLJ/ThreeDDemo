@@ -1,5 +1,6 @@
 package zero.com.threeddemo.twoD;
 
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
@@ -10,6 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class OpenGLRenderer implements GLSurfaceView.Renderer {
     Square square = new Square();
+    PictureSquare pictureSquare = new PictureSquare();
     FlatColoredSquare flatColoredSquare = new FlatColoredSquare();
     SmoothColoredSquare smoothColoredSquare = new SmoothColoredSquare();
 
@@ -29,6 +31,15 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
     private FloatBuffer mTriangleBuffer;
 
+    private int selectId = 0;
+    public void setSelectId(int id){
+        this.selectId = id;
+    }
+    private Context context;
+    public OpenGLRenderer(Context context){
+        this.context = context;
+    }
+
     /**
      *  定义实际的绘图操作
      * @param gl
@@ -41,28 +52,40 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         gl.glClearColor(cr, cg, cb, 0f);
 
         gl.glTranslatef(0, 0, -4);
-
-        //在进行坐标变换的一个好习惯是在变换前使用 glPushMatrix 保存当前矩阵，完成坐标变换操作后，再调用 glPopMatrix 恢复原先的矩阵设置。
-        gl.glPushMatrix();
-        gl.glRotatef(45f, 0f, 0f, 1f);
-        gl.glColor4f(1f, 1f, 1.0f, 1.0f);
-        square.draw(gl); // ( NEW )
-        gl.glPopMatrix();
-
-
-        gl.glPushMatrix();
-        gl.glTranslatef(1, 1, 0);
-        flatColoredSquare.draw(gl); // ( NEW )
-        gl.glPopMatrix();
-
-        gl.glPushMatrix();
-//        gl.glTranslatef(2,2,0);
-        gl.glScalef(0.5f, 0.5f, 0.5f);
-        gl.glRotatef(angle, 0f, 0f, 1f);
-        smoothColoredSquare.draw(gl); // ( NEW )
-        gl.glPopMatrix();
-
-
+        switch (selectId){
+            case 1:
+                //在进行坐标变换的一个好习惯是在变换前使用 glPushMatrix 保存当前矩阵，完成坐标变换操作后，再调用 glPopMatrix 恢复原先的矩阵设置。
+                gl.glPushMatrix();
+                gl.glScalef(0.5f, 0.5f, 0.5f);
+                gl.glRotatef(45f, 0f, 0f, 1f);
+                gl.glColor4f(1f, 1f, 1.0f, 1.0f);
+                square.draw(gl); // ( NEW )
+                gl.glPopMatrix();
+                break;
+            case 2:
+                gl.glPushMatrix();
+                gl.glScalef(0.5f, 0.5f, 0.5f);
+                gl.glRotatef(45f, 0f, 0f, 1f);
+//                gl.glTranslatef(1, 1, 0);
+                flatColoredSquare.draw(gl); // ( NEW )
+                gl.glPopMatrix();
+                break;
+            case 3:
+                gl.glPushMatrix();
+                gl.glScalef(0.5f, 0.5f, 0.5f);
+                gl.glRotatef(angle, 0f, 0f, 1f);
+                smoothColoredSquare.draw(gl); // ( NEW )
+                gl.glPopMatrix();
+                break;
+            case 4:
+                gl.glPushMatrix();
+                gl.glScalef(0.5f, 0.5f, 0.5f);
+//                gl.glRotatef(45f, 0f, 0f, 1f);
+                pictureSquare.setContext(context);
+                pictureSquare.draw(gl); // ( NEW )
+                gl.glPopMatrix();
+                break;
+        }
         // Draw our square.
 //        square.draw(gl); // ( NEW )
 

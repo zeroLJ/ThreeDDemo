@@ -11,7 +11,7 @@ public class OpenGLView extends GLSurfaceView {
 
        super(context);
 
-       mRenderer = new OpenGLRenderer();
+       mRenderer = new OpenGLRenderer(context);
 
        setRenderer(mRenderer);
 

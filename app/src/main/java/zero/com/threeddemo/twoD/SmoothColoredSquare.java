@@ -7,7 +7,8 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Created by jj on 2018/1/18.
+ * Created by zero on 2018/1/18.
+ * 颜色渐变正方形
  */
 
 public class SmoothColoredSquare extends Square {

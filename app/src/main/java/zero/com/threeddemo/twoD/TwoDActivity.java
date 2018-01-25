@@ -45,4 +45,20 @@ public class TwoDActivity extends AppCompatActivity {
             }
         },30,30);
     }
+
+    public void one(View view) {
+        mOpenGLView.getRenderer().setSelectId(1);
+    }
+
+    public void two(View view) {
+        mOpenGLView.getRenderer().setSelectId(2);
+    }
+
+    public void three(View view) {
+        mOpenGLView.getRenderer().setSelectId(3);
+    }
+
+    public void four(View view) {
+        mOpenGLView.getRenderer().setSelectId(4);
+    }
 }

@@ -15,6 +15,9 @@ import zero.com.threeddemo.R;
  * Created by jj on 2018/1/19.
  */
 
+/**
+ * 带贴图的立方体
+ */
 public class CubePicture extends Mesh {
     private Bitmap bitmap;
     public CubePicture(Context context,float width, float height, float depth) {
@@ -93,7 +96,7 @@ public class CubePicture extends Mesh {
         //因为glDrawElements用的模式为GL10.GL_TRIANGLE_STRIP
         //所以三角形是连在一起的，0，1，3，2代表顶点013组成的三角形和132组成的三角形真好组成一个面
         ByteBuffer indices1 = ByteBuffer.wrap(new byte[]{//前面
-                0,1,3,2,
+                0,3,1,2,
         });
 
         ByteBuffer indices2 = ByteBuffer.wrap(new byte[]{//后面
@@ -189,8 +192,8 @@ public class CubePicture extends Mesh {
 //        gl.glBindTexture(GL10.GL_TEXTURE_2D, tex_id[5]);
 //        gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4,  GL10.GL_UNSIGNED_BYTE, indices6);
 
-        gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 24,  GL10.GL_UNSIGNED_BYTE, ByteBuffer.wrap(new byte[]{//上面
-                0,1,3,2, 4,5,7,6, 8,9,11,10,12,13,15,14,  16,17,19,18,20,21,23,22,
+        gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 24,  GL10.GL_UNSIGNED_BYTE, ByteBuffer.wrap(new byte[]{
+                0,1,3,2, 4,5,7,6, 8,9,11,10, 12,13,15,14,  16,17,19,18, 20,21,23,22
         }));
 
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);

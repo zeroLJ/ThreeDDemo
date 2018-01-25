@@ -4,6 +4,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by jj on 2018/1/18.
+ * 带颜色正方形
  */
 
 public class FlatColoredSquare extends Square {

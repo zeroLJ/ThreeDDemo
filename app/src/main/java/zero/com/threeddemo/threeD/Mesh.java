@@ -89,7 +89,6 @@ public class Mesh {
             gl.glEnable(GL10.GL_TEXTURE_2D);
             gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
             loadTexture(gl);
-//            gl.glTexCoordPointer(3, GL10.GL_SHORT, 0, mTextureBuffer);  // ②
             gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);  // ②
             gl.glBindTexture(GL10.GL_TEXTURE_2D, texture);  // ③
         }
