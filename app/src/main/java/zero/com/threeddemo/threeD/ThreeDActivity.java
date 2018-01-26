@@ -30,6 +30,7 @@ public class ThreeDActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mOpenGLView.getRenderer().setColor(event.getX() / (event.getX() + 100), event.getY() / (event.getY() + 100), event.getX() / (event.getX() + 100));
+//                mOpenGLView.getRenderer().setColor(0.91015f,0.91015f,0.91015f);
                 return false;
             }
         });

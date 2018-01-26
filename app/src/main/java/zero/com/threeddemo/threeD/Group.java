@@ -10,6 +10,10 @@ import javax.microedition.khronos.opengles.GL10;
 public class Group extends Mesh {
     private Vector<Mesh> children = new Vector<Mesh>();
 
+    public Group(GL10 gl) {
+        super(gl);
+    }
+
     @Override
     public void draw(GL10 gl) {
         int size = children.size();

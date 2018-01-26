@@ -1,17 +1,21 @@
 package zero.com.threeddemo.threeD;
 
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.khronos.opengles.GL10;
+
 //长方形
 public class Plane extends Mesh {
-    public Plane() {
-        this(1, 1, 1, 1);
+    public Plane(GL10 gl) {
+        this(gl,1, 1, 1, 1);
     }
 
-    public Plane(float width, float height) {
-        this(width, height, 1, 1);
+    public Plane(GL10 gl,float width, float height) {
+        this(gl,width, height, 1, 1);
     }
 
-    public Plane(float width, float height, int widthSegments,
+    public Plane(GL10 gl, float width, float height, int widthSegments,
                  int heightSegments) {
+        super(gl);
         float[] vertices
                 = new float[(widthSegments + 1)
                 * (heightSegments + 1) * 3];

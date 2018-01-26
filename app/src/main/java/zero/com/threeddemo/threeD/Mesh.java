@@ -20,16 +20,18 @@ import zero.com.threeddemo.R;
  setVertices 允许子类重新定义顶点坐标。
  setIndices 允许子类重新定义顶点的顺序。
  setColor /setColors 允许子类重新定义颜色。
+ setTextureCoordinates 允许子类重新定义纹理
+ setLines 允许子类重新定义边框
  x,y,z 定义了平移变换的参数。
  rx,ry,rz 定义旋转变换的参数。
  */
 
 public class Mesh {
-    // Our vertex buffer.
+    // 顶点坐标数组.
     protected FloatBuffer verticesBuffer = null;
-    // Our index buffer.
+    // 顶点绘制顺序数组.
     protected ShortBuffer indicesBuffer = null;
-    // The number of indices.
+    // indicesBuffer长度
     private int numOfIndices = -1;
     // 给图形边框添加线条
     private ShortBuffer lineBuffer = null;
@@ -40,19 +42,20 @@ public class Mesh {
             = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
     // Smooth Colors
     protected FloatBuffer colorBuffer = null;
-    // Translate params.
+    // 平移量
     public float x = 0;
     public float y = 0;
     public float z = 0;
-    // Rotate params.
+    // 旋转量
     public float rx = 0;
     public float ry = 0;
     public float rz = 0;
 
     Context context;
-
-    int texture;
-
+    private GL10 gl;
+    public Mesh(GL10 gl){
+        this.gl = gl;
+    }
     public void setContext(Context context){
         this.context = context;
     }
@@ -73,8 +76,7 @@ public class Mesh {
         //of an array of vertex
         // coordinates to use when rendering.
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        // 启用贴图坐标数组数据
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);   // ①
+
         /**
          * 设置图形顶点，
          * size：坐标纬数，
@@ -85,11 +87,29 @@ public class Mesh {
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, verticesBuffer);
 
         if (mTextureBuffer != null){
+            // 启用贴图坐标数组数据
+            gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);   // ①
             // 启用2D纹理贴图
             gl.glEnable(GL10.GL_TEXTURE_2D);
             gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-            loadTexture(gl);
+//            loadTexture(gl);
+//            // 通知OpenGL将texture纹理绑定到GL10.GL_TEXTURE_2D目标中
+//            gl.glBindTexture(GL10.GL_TEXTURE_2D, texture);
+            // 设置纹理被缩小（距离视点很远时被缩小）时的滤波方式
+            gl.glTexParameterf(GL10.GL_TEXTURE_2D,
+                    GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+            // 设置纹理被放大（距离视点很近时被方法）时的滤波方式
+            gl.glTexParameterf(GL10.GL_TEXTURE_2D,
+                    GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+            // 设置在横向、纵向上都是平铺纹理
+            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
+                    GL10.GL_REPEAT);
+            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
+                    GL10.GL_REPEAT);
+            // 加载位图生成纹理
+            GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
             gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTextureBuffer);  // ②
+            // 通知OpenGL将texture纹理绑定到GL10.GL_TEXTURE_2D目标中
             gl.glBindTexture(GL10.GL_TEXTURE_2D, texture);  // ③
         }
 
@@ -131,15 +151,20 @@ public class Mesh {
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
         //关闭顶点开关
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-        // Disable the use of UV coordinates.
+        // 关闭纹理贴图相关
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-        // Disable the use of textures.
+        gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
         gl.glDisable(GL10.GL_TEXTURE_2D);
+
         // Disable face culling.
         gl.glDisable(GL10.GL_CULL_FACE);
 
     }
 
+    /**
+     * 设置顶点坐标
+     * @param vertices
+     */
     protected void setVertices(float[] vertices) {
         // a float is 4 bytes, therefore
         //we multiply the number if
@@ -152,6 +177,10 @@ public class Mesh {
         verticesBuffer.position(0);
     }
 
+    /**
+     * 设置绘制顺序
+     * @param indices
+     */
     protected void setIndices(short[] indices) {
         // short is 2 bytes, therefore we multiply
         //the number if
@@ -164,7 +193,11 @@ public class Mesh {
         indicesBuffer.position(0);
         numOfIndices = indices.length;
     }
-    //为每个顶点设置颜色，顶点之间颜色渐变，每四个float为一个点的颜色
+
+    /**
+     * 设置边框线条，每两点为一条线。
+     * @param points 必须为偶数
+     */
     protected void setLines(short[] points) {
         // short is 2 bytes, therefore we multiply
         //the number if
@@ -178,7 +211,14 @@ public class Mesh {
         numOfLines = points.length;
     }
 
-    //设置整个颜色
+
+    /**
+     *  设置整个颜色
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
     protected void setColor(float red, float green,
                             float blue, float alpha) {
         // Setting the flat color.
@@ -189,7 +229,10 @@ public class Mesh {
     }
 
 
-    //为每个顶点设置颜色，顶点之间颜色渐变，每四个float为一个点的颜色
+    /**
+     * 为每个顶点设置颜色，顶点之间颜色渐变，每四个float为一个点的颜色
+     * @param colors
+     */
     protected void setColors(float[] colors) {
         // float has 4 bytes.
         ByteBuffer cbb
@@ -201,14 +244,16 @@ public class Mesh {
     }
 
     // Our UV texture buffer.
-//    private ShortBuffer mTextureBuffer;
+
     protected FloatBuffer mTextureBuffer;
+    private  Bitmap bitmap;
+    private  int[] textures = new int[1];
+    public int texture;
     /**
-     * Set the texture coordinates.
-     *
+     * 设置纹理坐标&&纹理图片
      * @param textureCoords
      */
-    protected void setTextureCoordinates(float[] textureCoords) {
+    protected void setTextureCoordinates(float[] textureCoords , Bitmap bitmap) {
         // float is 4 bytes, therefore we multiply the number if
         // vertices with 4.
         ByteBuffer byteBuf = ByteBuffer.allocateDirect(
@@ -217,50 +262,14 @@ public class Mesh {
         mTextureBuffer = byteBuf.asFloatBuffer();
         mTextureBuffer.put(textureCoords);
         mTextureBuffer.position(0);
-    }
+        this.bitmap = bitmap;
 
-//    protected void setTextureCoordinates(short[] textureCoords) {
-//        // float is 4 bytes, therefore we multiply the number if
-//        // vertices with 4.
-//        ByteBuffer byteBuf = ByteBuffer.allocateDirect(
-//                textureCoords.length * 2);
-//        byteBuf.order(ByteOrder.nativeOrder());
-//        mTextureBuffer = byteBuf.asShortBuffer();
-//        mTextureBuffer.put(textureCoords);
-//        mTextureBuffer.position(0);
-//    }
-
-    private void loadTexture(GL10 gl) {
-        Bitmap bitmap = null;
-        try {
-            // 加载位图
-            bitmap = BitmapFactory.decodeResource(context.getResources(),
-                    R.mipmap.ic_launcher);
-            int[] textures = new int[1];
-            // 指定生成N个纹理（第一个参数指定生成一个纹理）
-            // textures数组将负责存储所有纹理的代号
-            gl.glGenTextures(1, textures, 0);
+        //创建时获取纹理id（不能在循环过程调用，否则会造成内存溢出，程序崩掉）
+        textures = new int[1];
+        // 指定生成N个纹理（第一个参数指定生成一个纹理）
+        // textures数组将负责存储所有纹理的代号
+        gl.glGenTextures(1, textures, 0);
 //            // 获取textures纹理数组中的第一个纹理
-            texture = textures[0];
-            // 通知OpenGL将texture纹理绑定到GL10.GL_TEXTURE_2D目标中
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, texture);
-            // 设置纹理被缩小（距离视点很远时被缩小）时的滤波方式
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D,
-                    GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-            // 设置纹理被放大（距离视点很近时被方法）时的滤波方式
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D,
-                    GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-            // 设置在横向、纵向上都是平铺纹理
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
-                    GL10.GL_REPEAT);
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
-                    GL10.GL_REPEAT);
-            // 加载位图生成纹理
-            GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-        } finally {
-            // 生成纹理之后，回收位图
-            if (bitmap != null)
-                bitmap.recycle();
-        }
+        texture = textures[0];
     }
 }  

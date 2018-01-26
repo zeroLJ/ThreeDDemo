@@ -1,11 +1,14 @@
 package zero.com.threeddemo.threeD;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * 带颜色带边框的立方体
  */
 
 public class CubeColor extends Mesh {
-    public CubeColor(float width, float height, float depth) {
+    public CubeColor(GL10 gl,float width, float height, float depth) {
+        super(gl);
         width /= 2;
         height /= 2;
         depth /= 2;
@@ -38,7 +41,11 @@ public class CubeColor extends Mesh {
         //设置绘制顺序
         setIndices(indices);
 
-        setColor(0.6f,0.4f,0.3f,0);
+//        setColor(0.6f,0.4f,0.3f,0);
+
+        setColor(0.81250f,0.61328f,0.41406f,0);
+
+
 //        setColors(new float[]{
 //                1f, 0f, 0f, 1f, // vertex 0 red
 //                0f, 1f, 0f, 1f, // vertex 1 green

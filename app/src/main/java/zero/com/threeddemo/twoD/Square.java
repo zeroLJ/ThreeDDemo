@@ -86,6 +86,7 @@ public class Square {
         }
         gl.glDrawElements(GL10.GL_TRIANGLES, indices.length,
                 GL10.GL_UNSIGNED_SHORT, indexBuffer);
+        gl.glDeleteTextures(1, textures, 0);
         // Disable the vertices buffer.
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -111,13 +112,15 @@ public class Square {
         mTextureBuffer.position(0);
     }
     int texture;
+    int[] textures = new int[1];
     private void loadTexture(GL10 gl) {
         Bitmap bitmap = null;
         try {
             // 加载位图
             bitmap = BitmapFactory.decodeResource(context.getResources(),
-                    R.mipmap.ic_launcher);
-            int[] textures = new int[1];
+                    R.drawable.ic_launcher);
+//            int[] textures = new int[1];
+            textures = new int[1];
             // 指定生成N个纹理（第一个参数指定生成一个纹理）
             // textures数组将负责存储所有纹理的代号
             gl.glGenTextures(1, textures, 0);

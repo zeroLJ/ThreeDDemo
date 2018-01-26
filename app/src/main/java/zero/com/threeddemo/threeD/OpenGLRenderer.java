@@ -17,11 +17,10 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     float height = 0.25f;
     float depth = 0.25f;
     int count = 0;
-    Plane plane = new Plane();
-    Cube cube = new Cube(1,1,1);
-    Group group = new Group();
-    CubeColor cubeColor = new CubeColor(width,height,depth);
+    Cube cube ;
+    CubeColor cubeColor;
     CubePicture cubePicture;
+    CubePicture cubePictureAdd;
     Context context;
     public OpenGLRenderer(Context context){
         this.context = context;
@@ -105,7 +104,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
                 cube.draw(gl);
                 break;
             case 2:
-                new CubeColor(1,1,1).draw(gl);
+                new CubeColor(gl,1,1,1).draw(gl);
                 break;
             case 3:
                 cubePicture.draw(gl);
@@ -117,8 +116,8 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
                 A:for (int i = 0 ; i < 4; i++){
                     for (int j = 0 ; j < 4; j++){
                         for (int k = 0 ; k < 4; k++){
-                            cubeColor.draw(gl);
-//                    cubePicture.draw(gl);
+//                            cubeColor.draw(gl);
+                            cubePictureAdd.draw(gl);
                             num++;
                             if (num == count){
                                 break A;
@@ -208,8 +207,12 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         //告诉系统对透视进行修正
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FOG_HINT);
 
-//        cubePicture = new CubePicture(context,1,1,1);
-        cubePicture = new CubePicture(context,1,1,1);
+        cubePicture = new CubePicture(gl,context,1,1,1);
+        cubePictureAdd = new CubePicture(gl,context,width,height,depth);
+        cube = new Cube(gl,1,1,1);
+        cube.setContext(context);
+
+        cubeColor = new CubeColor(gl,width,height,depth);
     }
 
     private float cr = 0, cg = 0, cb = 0;
