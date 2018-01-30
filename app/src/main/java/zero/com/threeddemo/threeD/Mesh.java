@@ -34,9 +34,9 @@ public class Mesh {
     // indicesBuffer长度
     private int numOfIndices = -1;
     // 给图形边框添加线条
-    private ShortBuffer lineBuffer = null;
+    protected ShortBuffer lineBuffer = null;
     // 需要连线的顶点数量
-    private int numOfLines = -1;
+    protected int numOfLines = -1;
     // Flat Color
     protected float[] rgba
             = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
@@ -133,6 +133,10 @@ public class Mesh {
         gl.glRotatef(ry, 0, 1, 0);
         gl.glRotatef(rz, 0, 0, 1);
 
+        if (blendAble){
+            gl.glEnable(GL10.GL_BLEND);
+            gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
+        }
         // Point out the where the color buffer is.绘制图形
 //        GL10.GL_TRIANGLE_STRIP
         gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, numOfIndices,
@@ -147,6 +151,9 @@ public class Mesh {
 
 
 
+        if (blendAble){
+            gl.glDisable(GL10.GL_BLEND);
+        }
         //关闭顶点颜色开关
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
         //关闭顶点开关
@@ -272,4 +279,11 @@ public class Mesh {
 //            // 获取textures纹理数组中的第一个纹理
         texture = textures[0];
     }
-}  
+
+
+    private boolean blendAble =  false;
+    //设置物体是否半透明，半透明的物体需要在最后绘制，不然会绘制错误
+    public void setBlendable(boolean blendAble){
+        this.blendAble = blendAble;
+    }
+}

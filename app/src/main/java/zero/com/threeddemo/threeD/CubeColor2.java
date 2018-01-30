@@ -3,24 +3,21 @@ package zero.com.threeddemo.threeD;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * 带颜色带边框的立方体（中心为零点）
+ * 带颜色带边框的立方体（左下角为零点）
  */
 
-public class CubeColor extends Mesh {
-    public CubeColor(GL10 gl,float width, float height, float depth) {
+public class CubeColor2 extends Mesh {
+    public CubeColor2(GL10 gl, float width, float height, float depth) {
         super(gl);
-        width /= 2;
-        height /= 2;
-        depth /= 2;
         //顶点坐标
-        float vertices[] = {-width, -height, -depth, // 0
-                width, -height, -depth, // 1
-                width, height, -depth, // 2
-                -width, height, -depth, // 3
-                -width, -height, depth, // 4
-                width, -height, depth, // 5
+        float vertices[] = {0, 0, 0, // 0
+                width,0, 0, // 1
+                width, height, 0, // 2
+                0, height, 0, // 3
+                0, 0, depth, // 4
+                width, 0, depth, // 5
                 width, height, depth, // 6
-                -width, height, depth, // 7
+                0, height, depth, // 7
         };
         //设置顶点坐标
         setVertices(vertices);
