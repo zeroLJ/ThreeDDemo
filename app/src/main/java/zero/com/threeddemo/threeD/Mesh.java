@@ -139,12 +139,14 @@ public class Mesh {
         }
         // Point out the where the color buffer is.绘制图形
 //        GL10.GL_TRIANGLE_STRIP
-        gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, numOfIndices,
-                GL10.GL_UNSIGNED_SHORT, indicesBuffer);
+        if (indicesBuffer!=null){
+            gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, numOfIndices,
+                    GL10.GL_UNSIGNED_SHORT, indicesBuffer);
+        }
 
         if (lineBuffer != null) {
             //以黑色绘制边框
-            gl.glColor4f(0f, 0f, 0f, 0f);
+            if (indicesBuffer!=null) gl.glColor4f(0f, 0f, 0f, 0f);
             gl.glDrawElements(GL10.GL_LINES, numOfLines, GL10.GL_UNSIGNED_SHORT, lineBuffer);
         }
 

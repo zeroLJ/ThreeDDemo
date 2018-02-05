@@ -3,16 +3,22 @@ package zero.com.threeddemo.threeD;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import android.opengl.GLUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import zero.com.threeddemo.ObjUtils;
+
 public class OpenGLRenderer implements GLSurfaceView.Renderer {
+    List<Map<String, String>> list = new ArrayList<>();
+    public void setList(List<Map<String, String>> list){
+         this.list = list;
+    }
     float width = 0.25f;
     float height = 0.25f;
     float depth = 0.25f;
@@ -22,6 +28,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     CubePicture cubePicture;
     CubePicture cubePictureAdd;
     Context context;
+    CubeLine cubeLine;
     public OpenGLRenderer(Context context){
         this.context = context;
     }
@@ -102,14 +109,101 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         switch (selectId){
             case 1:
                 cube.draw(gl);
+//                gl.glScalef(0.2f,0.2f,0.2f);
+//                float cartonLength = 6/2;
+//                float cartonWidth = 4.5f/2;
+//                float cartonHeight = 5/2;
+//                gl.glTranslatef(-cartonLength, -cartonWidth, -cartonHeight);
+//                gl.glPushMatrix();
+//                int num2 = 0;
+//                B:for (int z = 0; z < list.size(); z++){
+//                    Map<String, String> map = list.get(z);
+//                    gl.glPushMatrix();
+//                    t(gl, z);
+//                    gl.glPushMatrix();
+//                    float SKULength = ObjUtils.objToFloat(map.get("SKULength"));
+//                    float SKUWidth =ObjUtils.objToFloat(map.get("SKUWidth"));
+//                    float SKUHeight = ObjUtils.objToFloat(map.get("SKUHeight"));
+//                    CubeColor2 cube =  new CubeColor2(gl, SKULength, SKUWidth, SKUHeight);
+//                    A:for (int i = 0 ; i < ObjUtils.objToInt(map.get("heightNum")); i++){
+//                        for (int j = 0 ; j <  ObjUtils.objToInt(map.get("widthNum")); j++){
+//                            for (int k = 0 ; k <  ObjUtils.objToInt(map.get("lengthNum")); k++){
+////                            cubeColor.draw(gl);
+//                                cube.draw(gl);
+//                                num2++;
+//                                if (num2 == count){
+//                                    gl.glPopMatrix();
+//                                    gl.glPopMatrix();
+//                                    break B;
+//                                }
+//                                gl.glPopMatrix();
+//                                gl.glPushMatrix();
+//                                gl.glTranslatef(SKULength*(k+1),SKUWidth * j,SKUHeight * i);
+//                            }
+//                            //恢复到上一次保存的矩阵
+//                            gl.glPopMatrix();
+//                            gl.glPushMatrix();
+//                            gl.glTranslatef(0, SKUWidth * (j+1), SKUHeight * i);
+//                        }
+//                        gl.glPopMatrix();
+//                        gl.glPushMatrix();
+//                        gl.glTranslatef(0,0,SKUHeight * (i+1));
+//                    }
+//                    gl.glPopMatrix();
+//                    gl.glPopMatrix();
+//                }
+//                gl.glPopMatrix();
                 break;
             case 2:
                 new CubeColor(gl,1,1,1).draw(gl);
+//                int num3 = 0;
+//                gl.glScalef(0.2f,0.2f,0.2f);
+//                float cartonLength2 = 6/2;
+//                float cartonWidth2 = 4.5f/2;
+//                float cartonHeight2 = 5/2;
+//                gl.glTranslatef(-cartonLength2, -cartonWidth2, -cartonHeight2);
+//                gl.glPushMatrix();
+//                for (int z = 0; z < list.size(); z++){
+//                    Map<String, String> map = list.get(z);
+//                    gl.glPushMatrix();
+//                    t(gl, z);
+//                    gl.glPushMatrix();
+//                    float SKULength = ObjUtils.objToFloat(map.get("SKULength"));
+//                    float SKUWidth =ObjUtils.objToFloat(map.get("SKUWidth"));
+//                    float SKUHeight = ObjUtils.objToFloat(map.get("SKUHeight"));
+//                    CubeColor2 cube =  new CubeColor2(gl, SKULength, SKUWidth, SKUHeight);
+//                    for (int i = 0 ; i < ObjUtils.objToInt(map.get("heightNum")); i++){
+//                        for (int j = 0 ; j <  ObjUtils.objToInt(map.get("widthNum")); j++){
+//                            for (int k = 0 ; k <  ObjUtils.objToInt(map.get("lengthNum")); k++){
+////                            cubeColor.draw(gl);
+//                                num3++;
+//                                cube.draw(gl);
+//                                gl.glPopMatrix();
+//                                gl.glPushMatrix();
+//                                gl.glTranslatef(SKULength*(k+1),SKUWidth * j,SKUHeight * i);
+//                            }
+//                            //恢复到上一次保存的矩阵
+//                            gl.glPopMatrix();
+//                            gl.glPushMatrix();
+//                            gl.glTranslatef(0, SKUWidth * (j+1), SKUHeight * i);
+//                        }
+//                        gl.glPopMatrix();
+//                        gl.glPushMatrix();
+//                        gl.glTranslatef(0,0,SKUHeight * (i+1));
+//                    }
+//                    gl.glPopMatrix();
+//                    gl.glPopMatrix();
+//                }
+//                gl.glPopMatrix();
+//                new CubeBlend(gl,7f,5.5f,6f).draw(gl);
                 break;
             case 3:
-                cubePicture.draw(gl);
+                cubeLine.draw(gl);
                 break;
             case 4:
+                cubePicture.draw(gl);
+                break;
+            case 5:
                 gl.glTranslatef((float) (-2 * width+width*0.5), (float) (-2*height + height*0.5), (float) (-2*depth + depth*0.5));
                 gl.glPushMatrix();
                 int num = 0;
@@ -140,7 +234,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         }
 
 
-        gl.glPopMatrix();
+//        gl.glPopMatrix();
         gl.glPopMatrix();
 
 //        gl.glFlush();
@@ -213,6 +307,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         cube.setContext(context);
 
         cubeColor = new CubeColor(gl,width,height,depth);
+        cubeLine = new CubeLine(gl,1,1,1);
     }
 
     private float cr = 0, cg = 0, cb = 0;
@@ -222,5 +317,26 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         cr = r;
         cg = g;
         cb = b;
+    }
+
+
+    private void t(GL10 gl, int position){
+//        gl.glTranslatef(ObjUtils.mutiply(a, ObjUtils.objToFloat(list.get(0).get("SKULength"))), 0, 0);
+        String zone = ObjUtils.objToStr(list.get(position).get("zone"));
+        if (!zone.equals("原点")){
+            int per = ObjUtils.objToInt(zone.substring(1,2)) - 1;
+            t(gl, per);
+            int a = ObjUtils.objToInt(list.get(per).get("lengthNum"));
+            int b = ObjUtils.objToInt(list.get(per).get("widthNum"));
+            int c = ObjUtils.objToInt(list.get(per).get("heightNum"));
+            if (zone.endsWith("3")){
+                gl.glTranslatef(ObjUtils.mutiply(a, ObjUtils.objToFloat(list.get(per).get("SKULength"))), 0, 0);
+            }else if (zone.endsWith("2")){
+                gl.glTranslatef(0, ObjUtils.mutiply(b,  ObjUtils.objToFloat(list.get(per).get("SKUWidth"))), 0);
+            }else if (zone.endsWith("1")){
+//                Log.d("ljl","z:"+c+"*"+ObjUtils.objToFloat(list.get(0).get("SKUHeight"))+"="+ ObjUtils.mutiply(c,  ObjUtils.objToFloat(list.get(0).get("SKUHeight"))) );
+                gl.glTranslatef(0, 0, ObjUtils.mutiply(c, ObjUtils.objToFloat(list.get(per).get("SKUHeight"))));
+            }
+        }
     }
 }
